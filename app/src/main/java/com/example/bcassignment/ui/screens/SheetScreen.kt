@@ -1,5 +1,6 @@
 package com.example.bcassignment.ui.screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,6 +19,7 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -26,9 +28,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -52,9 +56,7 @@ fun SheetScreen(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    Text(
-                        text = stringResource(R.string.topbar_title_hello)
-                    )
+                    Text(text = stringResource(R.string.topbar_title_hello))
                 },
                 navigationIcon = {
                     Icon(
@@ -94,19 +96,39 @@ fun SheetScreen(
                 },
                 modifier = Modifier
                     .windowInsetsPadding(WindowInsets.statusBars)
-                    .padding(top = 64.dp)
-                ,
-                sheetState = modalBottomSheetState
+                    .padding(top = 64.dp),
+                sheetState = modalBottomSheetState,
+                scrimColor = Color.Transparent,
             ) {
-                TextField(
-                    value = userInput,
-                    onValueChange = { newInput -> userInput = newInput },
+                Row(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                        .windowInsetsPadding(WindowInsets.navigationBars)
-                        .focusRequester(focusRequester)
-                )
+                        .padding(horizontal = 16.dp),
+                    verticalAlignment = Alignment.Bottom
+                ) {
+                    TextField(
+                        value = userInput,
+                        onValueChange = { newInput -> userInput = newInput },
+                        modifier = Modifier
+                            .weight(1f)
+                            .windowInsetsPadding(WindowInsets.navigationBars)
+                            .focusRequester(focusRequester),
+                        placeholder = {
+                            Text(text = stringResource(R.string.text_field_placeholder))
+                        },
+                        colors = TextFieldDefaults.colors().copy(
+                            focusedContainerColor = Color.Transparent,
+                            focusedIndicatorColor = Color.Transparent,
+                        )
+                    )
+                    // Not using IconButton because it has default paddings.
+                    Icon(
+                        imageVector = ImageVector.vectorResource(R.drawable.ic_cancel),
+                        contentDescription = stringResource(R.string.icon_desc_clear),
+                        modifier = Modifier
+                            .padding(vertical = 16.dp)
+                            .clickable { userInput = "" }
+                    )
+                }
 
                 LaunchedEffect(modalBottomSheetState.isVisible) {
                     if (modalBottomSheetState.isVisible) {
