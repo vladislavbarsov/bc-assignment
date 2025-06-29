@@ -3,5 +3,6 @@
     <string name="topbar_title_hello">Hello</string>
     <string name="topbar_menu_icon_desc">Top app bar menu button</string>
     <string name="icon_desc_clear">Clear input text</string>
+    <string name="icon_desc_add">Write a new message</string>
     <string name="text_field_placeholder">Type message...</string>
 </resources>

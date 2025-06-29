@@ -1,19 +1,18 @@
 package com.example.bcassignment.ui.screens
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FabPosition
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
@@ -66,27 +65,30 @@ fun SheetScreen(
                 },
             )
         },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    isSheetVisible = !isSheetVisible
+                }
+            ) {
+                Icon(
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_add),
+                    contentDescription = stringResource(R.string.icon_desc_add)
+                )
+            }
+        },
+        floatingActionButtonPosition = FabPosition.End
     ) { paddingValues ->
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
+                .padding(horizontal = 16.dp)
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Button(
-                    onClick = {
-                        isSheetVisible = !isSheetVisible
-                    }
-                ) {
-                    Text(
-                        text = "Toggle bottom sheet"
-                    )
-                }
-            }
+            Text(
+                "Your message are listed below"
+            )
         }
 
         if (isSheetVisible) {
@@ -101,8 +103,6 @@ fun SheetScreen(
                 scrimColor = Color.Transparent,
             ) {
                 Row(
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp),
                     verticalAlignment = Alignment.Bottom
                 ) {
                     TextField(
@@ -126,7 +126,10 @@ fun SheetScreen(
                         contentDescription = stringResource(R.string.icon_desc_clear),
                         modifier = Modifier
                             .padding(vertical = 16.dp)
-                            .clickable { userInput = "" }
+                            .padding(end = 16.dp)
+                            .clickable {
+                                userInput = ""
+                            },
                     )
                 }
 
