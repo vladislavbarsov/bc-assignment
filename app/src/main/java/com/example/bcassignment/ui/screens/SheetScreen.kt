@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
@@ -14,6 +15,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -58,18 +60,20 @@ fun SheetScreen(
                     Text(text = stringResource(R.string.topbar_title_hello))
                 },
                 navigationIcon = {
-                    Icon(
-                        imageVector = ImageVector.vectorResource(R.drawable.ic_menu),
-                        contentDescription = stringResource(R.string.topbar_menu_icon_desc)
-                    )
+                    IconButton(
+                        onClick = { }
+                    ) {
+                        Icon(
+                            imageVector = ImageVector.vectorResource(R.drawable.ic_menu),
+                            contentDescription = stringResource(R.string.topbar_menu_icon_desc)
+                        )
+                    }
                 },
             )
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = {
-                    isSheetVisible = !isSheetVisible
-                }
+                onClick = { isSheetVisible = !isSheetVisible }
             ) {
                 Icon(
                     imageVector = ImageVector.vectorResource(R.drawable.ic_add),
@@ -77,7 +81,7 @@ fun SheetScreen(
                 )
             }
         },
-        floatingActionButtonPosition = FabPosition.End
+        floatingActionButtonPosition = FabPosition.End,
     ) { paddingValues ->
 
         Column(
@@ -98,7 +102,8 @@ fun SheetScreen(
                 },
                 modifier = Modifier
                     .windowInsetsPadding(WindowInsets.statusBars)
-                    .padding(top = 64.dp),
+                    .padding(top = 64.dp)
+                    .fillMaxHeight(),
                 sheetState = modalBottomSheetState,
                 scrimColor = Color.Transparent,
             ) {
