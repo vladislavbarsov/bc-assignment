@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import com.example.bcassignment.ui.screens.BottomSheetScaffoldScreen
+import com.example.bcassignment.ui.screens.CustomBottomSheetScreen
 import com.example.bcassignment.ui.screens.SheetScreen
 import com.example.bcassignment.ui.theme.BCAssignmentTheme
 
@@ -13,7 +15,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             BCAssignmentTheme {
-                SheetScreen()
+                //SheetScreen()
+                CustomBottomSheetScreen()
+                //BottomSheetScaffoldScreen()
             }
         }
     }
