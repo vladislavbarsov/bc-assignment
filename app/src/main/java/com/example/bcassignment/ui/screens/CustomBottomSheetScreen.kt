@@ -135,12 +135,11 @@ fun CustomBottomSheetScreen(
                     onValueCleared = { userInput = "" },
                     focusRequester = focusRequester,
                     sheetHeight = animatedSheetHeight,
-                    onHeightChanged = { newHeight ->
+                    onHeightChanged = { ascending, newHeight ->
+                        val imePresent = imeHeight > 0.dp
                         val newTargetHeight = when {
-                            imeHeight > 0.dp && newHeight > 250.dp -> maxBottomSheetHeight
-                            currentBottomSheetHeight == maxBottomSheetHeight && newHeight < (maxBottomSheetHeight - 50.dp)  -> {
-                                minBottomSheetHeight
-                            }
+                            imePresent && ascending && newHeight > 250.dp -> maxBottomSheetHeight
+                            imePresent && !ascending && newHeight < 350.dp -> minBottomSheetHeight
                             imeHeight == 0.dp -> minBottomSheetHeight
                             else -> newHeight
                         }
@@ -167,7 +166,7 @@ fun CustomBottomSheet(
     onValueCleared: () -> Unit,
     focusRequester: FocusRequester,
     sheetHeight: Dp,
-    onHeightChanged: (Dp) -> Unit
+    onHeightChanged: (Boolean, Dp) -> Unit
 ) {
     Surface(
         modifier = modifier
@@ -197,8 +196,9 @@ fun CustomBottomSheet(
                     .draggable(
                         orientation = Orientation.Vertical,
                         state = rememberDraggableState { delta ->
+                            val ascendingDirection = delta < 0
                             val newHeight = sheetHeight - (delta * 1.2).dp
-                            onHeightChanged(newHeight)
+                            onHeightChanged(ascendingDirection, newHeight)
                         }
                     )
                 ,
