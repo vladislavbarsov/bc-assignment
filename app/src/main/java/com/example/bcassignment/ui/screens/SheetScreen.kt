@@ -123,6 +123,8 @@ fun SheetScreen(
                         colors = TextFieldDefaults.colors().copy(
                             focusedContainerColor = Color.Transparent,
                             focusedIndicatorColor = Color.Transparent,
+                            unfocusedIndicatorColor = Color.Transparent,
+                            disabledIndicatorColor = Color.Transparent
                         )
                     )
                     // Not using IconButton because it has default paddings.
