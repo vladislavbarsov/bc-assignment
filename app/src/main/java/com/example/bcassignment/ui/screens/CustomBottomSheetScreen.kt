@@ -47,6 +47,7 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
@@ -68,10 +69,10 @@ fun CustomBottomSheetScreen(
     val bottomSheetModifier = Modifier
         .imePadding()
 
-    val imeHeight = with (LocalDensity.current) {
+    val imeHeight = with(LocalDensity.current) {
         WindowInsets.ime.getBottom(LocalDensity.current).toDp()
     }
-    val statusBarHeight = with (LocalDensity.current) {
+    val statusBarHeight = with(LocalDensity.current) {
         WindowInsets.statusBars.getTop(LocalDensity.current).toDp()
     }
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
@@ -120,6 +121,7 @@ fun CustomBottomSheetScreen(
             Text("ime keyboard height - $imeHeight")
             Text("current height - $currentBottomSheetHeight")
             Text("current max bottom sheet height - $maxBottomSheetHeight")
+            Text("current min bottom sheet height - $minBottomSheetHeight")
         }
 
         Box(
@@ -168,6 +170,9 @@ fun CustomBottomSheet(
     sheetHeight: Dp,
     onHeightChanged: (Boolean, Dp) -> Unit
 ) {
+    var textFieldHeight by remember { mutableStateOf(0.dp) }
+    val density = LocalDensity.current
+
     Surface(
         modifier = modifier
             .fillMaxWidth()
@@ -181,8 +186,7 @@ fun CustomBottomSheet(
                         y = 16.dp.toPx()
                     ),
                 )
-            }
-        ,
+            },
         shape = RoundedCornerShape(
             topStart = 16.dp,
             topEnd = 16.dp
@@ -200,8 +204,7 @@ fun CustomBottomSheet(
                             val newHeight = sheetHeight - (delta * 1.2).dp
                             onHeightChanged(ascendingDirection, newHeight)
                         }
-                    )
-                ,
+                    ),
                 horizontalArrangement = Arrangement.Center
             ) {
                 BottomSheetDefaults.DragHandle()
@@ -218,7 +221,18 @@ fun CustomBottomSheet(
                     modifier = Modifier
                         .weight(1f)
                         .windowInsetsPadding(WindowInsets.navigationBars)
-                        .focusRequester(focusRequester),
+                        .focusRequester(focusRequester)
+                        .onSizeChanged { newSize ->
+                            val newTextFieldHeight = with(density) { newSize.height.toDp() }
+                            if (newTextFieldHeight != textFieldHeight) {
+                                val heightDifference = newTextFieldHeight - textFieldHeight
+                                textFieldHeight = newTextFieldHeight
+                                onHeightChanged(
+                                    heightDifference > 0.dp,
+                                    sheetHeight + heightDifference
+                                )
+                            }
+                        },
                     placeholder = {
                         Text(text = stringResource(R.string.text_field_placeholder))
                     },
@@ -230,13 +244,15 @@ fun CustomBottomSheet(
                     )
                 )
                 Spacer(modifier = Modifier.width(16.dp))
-                // Not using IconButton because it has default paddings.
                 Icon(
                     imageVector = ImageVector.vectorResource(R.drawable.ic_cancel),
                     contentDescription = stringResource(R.string.icon_desc_clear),
                     modifier = Modifier
                         .padding(vertical = 16.dp)
-                        .clickable { onValueCleared() },
+                        .clickable {
+                            onValueCleared()
+                            onHeightChanged(false, 130.dp)
+                        },
                 )
             }
         }
